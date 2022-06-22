@@ -18,8 +18,104 @@ const App = () => {
     ...initialData,
   });
 
+  const handleListDrop = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const newListOrder = Array.from(state.listOrder);
+    newListOrder.splice(source.index, 1);
+    newListOrder.splice(destination.index, 0, draggableId);
+
+    const newState = { ...state, listOrder: newListOrder };
+    setState(newState);
+  };
+
+  const reorderListItem = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const currentList = state.lists[source.droppableId];
+
+    const currentListItemIds = Array.from(currentList.listItemIds);
+    currentListItemIds.splice(source.index, 1);
+    currentListItemIds.splice(destination.index, 0, draggableId);
+
+    const newList = {
+      ...currentList,
+      listItemIds: currentListItemIds,
+    };
+
+    const newState = {
+      ...state,
+      lists: {
+        ...state.lists,
+        [newList.id]: newList,
+      },
+    };
+
+    setState(newState);
+  };
+
+  const moveListItem = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const currentList = state.lists[source.droppableId];
+    const previousList = state.lists[destination.droppableId];
+
+    const currentListItemIds = Array.from(currentList.listItemIds);
+    currentListItemIds.splice(source.index, 1);
+    const newStart = {
+      ...currentList,
+      listItemIds: currentListItemIds,
+    };
+
+    const previousListItemIds = Array.from(previousList.listItemIds);
+    previousListItemIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...previousList,
+      listItemIds: previousListItemIds,
+    };
+
+    const newState = {
+      ...state,
+      lists: {
+        ...state.lists,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
+      },
+    };
+
+    setState(newState);
+  };
+
+  const handleListItemDrop = (result: DropResult) => {
+    const { destination, source } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const isDestinationSameList =
+      source.droppableId === destination.droppableId;
+    if (isDestinationSameList) {
+      reorderListItem(result);
+    } else {
+      moveListItem(result);
+    }
+  };
+
   const onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, type } = result;
 
     if (!destination) {
       return;
@@ -33,64 +129,12 @@ const App = () => {
     }
 
     if (type === 'list') {
-      const newColumnOrder = Array.from(state.columnOrder);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
-
-      const newState = { ...state, columnOrder: newColumnOrder };
-      setState(newState);
-      return;
+      handleListDrop(result);
     }
 
-    const start = state.columns[source.droppableId];
-    const finish = state.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds,
-      };
-
-      const newState = {
-        ...state,
-        columns: {
-          ...state.columns,
-          [newColumn.id]: newColumn,
-        },
-      };
-
-      setState(newState);
-      return;
+    if (type === 'listItem') {
+      handleListItemDrop(result);
     }
-
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds,
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds,
-    };
-
-    const newState = {
-      ...state,
-      columns: {
-        ...state.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      },
-    };
-
-    setState(newState);
   };
 
   return (
@@ -98,15 +142,17 @@ const App = () => {
       <Droppable droppableId="all-lists" direction="horizontal" type="list">
         {(provided) => (
           <Container {...provided.droppableProps} ref={provided.innerRef}>
-            {state.columnOrder.map((columnId, index) => {
-              const column = state.columns[columnId];
-              const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
+            {state.listOrder.map((listId, index) => {
+              const list = state.lists[listId];
+              const listItems = list.listItemIds.map(
+                (listItemId) => state.listItems[listItemId]
+              );
 
               return (
                 <List
-                  key={column.id}
-                  column={column}
-                  listItems={tasks}
+                  key={list.id}
+                  list={list}
+                  listItems={listItems}
                   index={index}
                 />
               );

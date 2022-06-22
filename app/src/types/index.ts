@@ -3,14 +3,14 @@ export interface ListItem {
   content: string;
 }
 
-export interface Column {
+export interface List {
   id: string;
   title: string;
-  taskIds: string[];
+  listItemIds: string[];
 }
 
 export interface InitialData {
-  tasks: { [key: string]: ListItem };
-  lists: { [key: string]: Column };
-  columnOrder: string[];
+  listItems: { [key: string]: ListItem };
+  lists: { [key: string]: List };
+  listOrder: string[];
 }

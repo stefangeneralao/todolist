@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { Column as ColumnType, ListItem as ListItemType } from '~/types';
+import { List as ListType, ListItem as ListItemType } from '~/types';
 import ListItem from '~/components/ListItem';
 
 const Container = styled.div`
@@ -29,29 +29,29 @@ const ListItems = styled.div<{ isDraggingOver: boolean }>`
 `;
 
 interface Props {
-  column: ColumnType;
+  list: ListType;
   listItems: ListItemType[];
   index: number;
 }
 
-const List = ({ column, listItems, index }: Props) => {
+const List = ({ list, listItems, index }: Props) => {
   return (
-    <Draggable draggableId={column.id} index={index}>
+    <Draggable draggableId={list.id} index={index}>
       {(provided) => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <Title {...provided.dragHandleProps}>{column.title}</Title>
-          <Droppable droppableId={column.id} type="task">
+          <Title {...provided.dragHandleProps}>{list.title}</Title>
+          <Droppable droppableId={list.id} type="listItem">
             {(provided, snapshot) => (
               <ListItems
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                {listItems.map((task, index) => (
+                {listItems.map((listItem, index) => (
                   <ListItem
-                    key={task.id}
-                    id={task.id}
-                    content={task.content}
+                    key={listItem.id}
+                    id={listItem.id}
+                    content={listItem.content}
                     index={index}
                   />
                 ))}
