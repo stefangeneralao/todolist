@@ -1,13 +1,10 @@
 import '@atlaskit/css-reset';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
-import styled from 'styled-components';
 
 import List from '~/components/List';
 import { useLists } from '~/context/lists';
 
-const Container = styled.div`
-  display: flex;
-`;
+import { Container } from './styles';
 
 const Lists = () => {
   const { lists, listOrder, reorderList, moveListItem, reorderListItem } =
