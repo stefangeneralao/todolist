@@ -10,14 +10,8 @@ const Container = styled.div`
 `;
 
 const Lists = () => {
-  const {
-    lists,
-    listItems,
-    listOrder,
-    reorderList,
-    moveListItem,
-    reorderListItem,
-  } = useLists();
+  const { lists, listOrder, reorderList, moveListItem, reorderListItem } =
+    useLists();
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, type, draggableId } = result;
@@ -59,9 +53,10 @@ const Lists = () => {
               return (
                 <List
                   key={list.id}
-                  list={list}
-                  listItems={list.listItemIds.map((id) => listItems[id])}
+                  id={list.id}
                   index={index}
+                  title={list.title}
+                  listItemIds={list.listItemIds}
                 />
               );
             })}

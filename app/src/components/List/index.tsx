@@ -1,9 +1,9 @@
-import React from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { List as ListType, ListItem as ListItemType } from '~/types';
 import ListItem from '~/components/ListItem';
+import { useLists } from '~/context/lists';
 
 const Container = styled.div`
   margin: 8px;
@@ -20,7 +20,7 @@ const Title = styled.h3`
   padding: 8px;
 `;
 
-const ListItems = styled.div<{ isDraggingOver: boolean }>`
+const ListItemsContainer = styled.div<{ isDraggingOver: boolean }>`
   padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${(props) => (props.isDraggingOver ? '#e0f7fa' : 'white')};
@@ -29,39 +29,47 @@ const ListItems = styled.div<{ isDraggingOver: boolean }>`
 `;
 
 interface Props {
-  list: ListType;
-  listItems: ListItemType[];
+  id: string;
   index: number;
+  title: string;
+  listItemIds: string[];
 }
 
-const List = ({ list, listItems, index }: Props) => {
-  return (
-    <Draggable draggableId={list.id} index={index}>
-      {(provided) => (
-        <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <Title {...provided.dragHandleProps}>{list.title}</Title>
-          <Droppable droppableId={list.id} type="listItem">
-            {(provided, snapshot) => (
-              <ListItems
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                isDraggingOver={snapshot.isDraggingOver}
-              >
-                {listItems.map((listItem, index) => (
-                  <ListItem
-                    key={listItem.id}
-                    id={listItem.id}
-                    content={listItem.content}
-                    index={index}
-                  />
-                ))}
-                {provided.placeholder}
-              </ListItems>
-            )}
-          </Droppable>
-        </Container>
-      )}
-    </Draggable>
+const List = ({ id, index, title, listItemIds }: Props) => {
+  const { listItems } = useLists();
+
+  return useMemo(
+    () => (
+      <Draggable draggableId={id} index={index}>
+        {(provided) => (
+          <Container {...provided.draggableProps} ref={provided.innerRef}>
+            <Title {...provided.dragHandleProps}>{title}</Title>
+            <Droppable droppableId={id} type="listItem">
+              {(provided, snapshot) => (
+                <ListItemsContainer
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {listItemIds
+                    .map((listItemId) => listItems[listItemId])
+                    .map((listItem, index) => (
+                      <ListItem
+                        key={listItem.id}
+                        id={listItem.id}
+                        content={listItem.content}
+                        index={index}
+                      />
+                    ))}
+                  {provided.placeholder}
+                </ListItemsContainer>
+              )}
+            </Droppable>
+          </Container>
+        )}
+      </Draggable>
+    ),
+    [listItemIds, index]
   );
 };
 
