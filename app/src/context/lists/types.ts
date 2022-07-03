@@ -8,6 +8,11 @@ export interface ListsContextType {
   reorderList: ReorderList;
   moveListItem: MoveListItem;
   reorderListItem: ReorderListItem;
+  addList: AddList;
+}
+
+export interface AddList {
+  (title: string): void;
 }
 
 export interface ListsProviderProps {

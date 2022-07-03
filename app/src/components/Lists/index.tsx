@@ -1,4 +1,3 @@
-import '@atlaskit/css-reset';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import List from '~/components/List';

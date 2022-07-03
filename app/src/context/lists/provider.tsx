@@ -80,6 +80,24 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
+  const addList = (title: string) => {
+    const id = crypto.randomUUID();
+
+    const newList = {
+      id,
+      title,
+      listItemIds: [],
+    } as List;
+
+    const newLists = {
+      ...lists,
+      [newList.id]: newList,
+    };
+
+    setListOrder([...listOrder, id]);
+    setLists(newLists);
+  };
+
   const value = {
     lists,
     listItems,
@@ -87,6 +105,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     reorderList,
     moveListItem,
     reorderListItem,
+    addList,
   };
 
   return (
