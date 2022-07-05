@@ -8,6 +8,7 @@ import {
 } from '~/mocks/lists';
 
 import {
+  ListsContextType,
   ListsProviderProps,
   MoveListItem,
   ReorderList,
@@ -83,11 +84,11 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
   const addList = (title: string) => {
     const id = crypto.randomUUID();
 
-    const newList = {
+    const newList: List = {
       id,
       title,
       listItemIds: [],
-    } as List;
+    };
 
     const newLists = {
       ...lists,
@@ -98,7 +99,32 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
-  const value = {
+  const addListItem = (listId: string, content: string) => {
+    const listItemId = crypto.randomUUID();
+
+    const newListItem: ListItem = {
+      id: listItemId,
+      content,
+    };
+
+    const newListItems = {
+      ...listItems,
+      [listItemId]: newListItem,
+    };
+
+    const newLists = {
+      ...lists,
+      [listId]: {
+        ...lists[listId],
+        listItemIds: [...lists[listId].listItemIds, listItemId],
+      },
+    };
+
+    setListItems(newListItems);
+    setLists(newLists);
+  };
+
+  const value: ListsContextType = {
     lists,
     listItems,
     listOrder,
@@ -106,6 +132,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     moveListItem,
     reorderListItem,
     addList,
+    addListItem,
   };
 
   return (

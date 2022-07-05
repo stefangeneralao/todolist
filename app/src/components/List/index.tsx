@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import ListItem from '~/components/ListItem';
+import NewlistItemInput from '~/components/NewListItemInput';
 import { useLists } from '~/context/lists';
 
 import { Container, ListItemsContainer, Title } from './styles';
@@ -40,6 +41,7 @@ const List = ({ id, index, title, listItemIds }: Props) => {
                       />
                     ))}
                   {provided.placeholder}
+                  <NewlistItemInput listId={id} />
                 </ListItemsContainer>
               )}
             </Droppable>
