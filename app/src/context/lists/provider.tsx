@@ -124,6 +124,18 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
+  const renameListItem = (listItemId: string, content: string) => {
+    const newListItems = {
+      ...listItems,
+      [listItemId]: {
+        ...listItems[listItemId],
+        content,
+      },
+    };
+
+    setListItems(newListItems);
+  };
+
   const value: ListsContextType = {
     lists,
     listItems,
@@ -133,6 +145,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     reorderListItem,
     addList,
     addListItem,
+    renameListItem,
   };
 
   return (

@@ -10,6 +10,11 @@ export interface ListsContextType {
   reorderListItem: ReorderListItem;
   addList: AddList;
   addListItem: AddListItem;
+  renameListItem: RenameListItem;
+}
+
+export interface RenameListItem {
+  (listItemId: string, content: string): void;
 }
 
 export interface AddListItem {
