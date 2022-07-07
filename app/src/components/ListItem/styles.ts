@@ -4,6 +4,8 @@ export const Container = styled.div<{
   isDragging: boolean;
   isEditing: boolean;
 }>`
+  display: grid;
+  grid-template-columns: 1fr auto;
   border: 1px solid lightgrey;
   padding: 8px;
   margin-bottom: 8px;

@@ -136,6 +136,34 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setListItems(newListItems);
   };
 
+  const removeListItem = (listItemId: string) => {
+    const parentListEntries = Object.entries(lists);
+    const parentListEntry = parentListEntries.find(([_, listValues]) =>
+      listValues.listItemIds.includes(listItemId)
+    );
+    if (!parentListEntry) return;
+
+    const [parentListId, parentListValue] = parentListEntry;
+    const newParentListValue = {
+      ...parentListValue,
+      listItemIds: parentListValue.listItemIds.filter(
+        (id) => id !== listItemId
+      ),
+    };
+    const newParentListEntry = [parentListId, newParentListValue];
+    const newParentList = Object.fromEntries([newParentListEntry]);
+    const newLists = {
+      ...lists,
+      ...newParentList,
+    };
+
+    const newListItems = { ...listItems };
+    delete newListItems[listItemId];
+
+    setLists(newLists);
+    setListItems(newListItems);
+  };
+
   const value: ListsContextType = {
     lists,
     listItems,
@@ -146,6 +174,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     addList,
     addListItem,
     renameListItem,
+    removeListItem,
   };
 
   return (
