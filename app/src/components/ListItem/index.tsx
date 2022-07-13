@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { useLists } from '~/context/lists';
+import { Typography } from '@material-ui/core';
 
+import { useLists } from '~/context/lists';
 import { ListItem as ListItemType } from '~/types';
 
 import RemoveButton from './RemoveButton';
-import { Container, Input } from './styles';
+import { Container, Input, ListItemTitle } from './styles';
 
 interface Props extends ListItemType {
   index: number;
@@ -60,10 +61,12 @@ const ListItem = ({ id, content, index }: Props) => {
                 value={textFieldValue}
                 onBlur={onBlur}
                 onChange={onChange}
+                autoFocus
+                disableUnderline
               />
             </form>
           ) : (
-            <span>{textFieldValue}</span>
+            <ListItemTitle>{textFieldValue}</ListItemTitle>
           )}
 
           {showRemoveButton && !isEditing && <RemoveButton id={id} />}

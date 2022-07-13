@@ -1,16 +1,6 @@
 import styled from 'styled-components';
+import { Input as MuiInput } from '@material-ui/core';
 
-export const Input = styled.input`
-  border: 0;
-  font-size: 1rem;
+export const Input = styled(MuiInput)`
   width: 100%;
-
-  ::placeholder {
-    color: black;
-  }
-`;
-
-export const Form = styled.form`
-  display: grid;
-  grid-template-columns: min-content auto;
 `;

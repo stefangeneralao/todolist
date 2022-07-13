@@ -1,5 +1,5 @@
 import { useLists } from '~/context/lists';
-import { Container } from './styles';
+import { Button } from './styles';
 
 interface Props {
   id: string;
@@ -14,7 +14,7 @@ const RemoveButton = ({ id }: Props) => {
     removeListItem(id);
   };
 
-  return <Container onClick={onClick}>X</Container>;
+  return <Button onClick={onClick}>X</Button>;
 };
 
 export default RemoveButton;

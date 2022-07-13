@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Typography } from '@material-ui/core';
 
 export const Container = styled.div`
   margin: 8px;
@@ -12,10 +13,8 @@ export const Container = styled.div`
   flex-direction: column;
 `;
 
-export const Title = styled.h3`
+export const Title = styled(Typography)`
   padding: 8px;
-  padding: 0;
-  margin: 0;
 `;
 
 export const ListItemsContainer = styled.div<{ isDraggingOver: boolean }>`

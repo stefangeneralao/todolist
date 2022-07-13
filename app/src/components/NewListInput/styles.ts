@@ -1,11 +1,9 @@
 import styled from 'styled-components';
+import { Input as MuiInput } from '@material-ui/core';
 
-export const Input = styled.input`
-  border: 1px solid lightgrey;
+export const Input = styled(MuiInput)`
   height: 100%;
   width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
 `;
 
 export const Form = styled.form`

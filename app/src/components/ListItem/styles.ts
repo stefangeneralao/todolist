@@ -1,35 +1,42 @@
 import styled from 'styled-components';
+import { Input as MuiInput, Typography } from '@material-ui/core';
 
 export const Container = styled.div<{
   isDragging: boolean;
   isEditing: boolean;
 }>`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  border: 1px solid lightgrey;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 2px;
-  background-color: white;
-  transition: background-color 0.2s ease;
-  box-shadow: ${({ isDragging, isEditing }) => {
-    if (isDragging) {
-      return '0px 3px 10px #00000022';
+  ${({ isDragging, isEditing }) => `
+    display: grid;
+    height: 30px;
+    grid-template-columns: 1fr auto;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+    background-color: white;
+    transition: background-color 0.2s ease;
+    box-shadow: ${
+      isDragging
+        ? `0px 3px 9px #00000033`
+        : isEditing
+        ? `0px 0px 10px #00cccc77`
+        : `0px 1px 3px #00000033`
     }
-    if (isEditing) {
-      return '0px 0px 10px #00cccc77';
-    }
-    return 'none';
-  }};
+  `}
 `;
 
-export const Input = styled.input`
-  border: 0;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0;
+export const Input = styled(MuiInput)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+`;
 
-  &:focus {
-    outline: none;
-  }
+export const ListItemTitle = styled(Typography)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 `;

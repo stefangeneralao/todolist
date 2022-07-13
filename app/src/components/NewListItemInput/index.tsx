@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLists } from '~/context/lists';
-import { Form, Input } from './styles';
+import { Input } from './styles';
 
 interface Props {
   listId: string;
@@ -22,15 +22,14 @@ const NewlistItemInput = ({ listId }: Props) => {
   };
 
   return (
-    <Form onSubmit={onSubmit}>
-      <span>+</span>
+    <form onSubmit={onSubmit}>
       <Input
         type="text"
-        placeholder="List item"
+        placeholder="+ List item"
         value={textFieldValue}
         onChange={onChange}
       />
-    </Form>
+    </form>
   );
 };
 

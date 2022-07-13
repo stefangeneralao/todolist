@@ -51,7 +51,9 @@ const List = ({ id, index, title, listItemIds }: Props) => {
             onMouseOver={onMouseOver}
             onMouseLeave={onMouseLeave}
           >
-            <Title {...provided.dragHandleProps}>{title}</Title>
+            <Title variant="h3" {...provided.dragHandleProps}>
+              {title}
+            </Title>
             {showRemoveButton && <RemoveButton listId={id} />}
           </StyledTopSection>
           <Droppable droppableId={id} type="listItem">

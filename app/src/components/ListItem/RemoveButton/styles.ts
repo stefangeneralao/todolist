@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import { Button as MuiButton } from '@material-ui/core';
 
-export const Container = styled.button`
+export const Button = styled(MuiButton)`
   float: right;
-  cursor: pointer;
-  border: 0;
+  height: inherit;
 `;
