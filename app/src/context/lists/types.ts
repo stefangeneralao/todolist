@@ -12,6 +12,11 @@ export interface ListsContextType {
   addListItem: AddListItem;
   renameListItem: RenameListItem;
   removeListItem: RemoveListItem;
+  removeList: RemoveList;
+}
+
+export interface RemoveList {
+  (listId: string): void;
 }
 
 export interface RemoveListItem {

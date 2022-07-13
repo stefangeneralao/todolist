@@ -1,11 +1,17 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import ListItem from '~/components/ListItem';
 import NewlistItemInput from '~/components/NewListItemInput';
 import { useLists } from '~/context/lists';
 
-import { Container, ListItemsContainer, Title } from './styles';
+import RemoveButton from './RemoveButton';
+import {
+  Container,
+  ListItemsContainer,
+  Title,
+  TopSection as StyledTopSection,
+} from './styles';
 
 interface Props {
   id: string;
@@ -16,40 +22,54 @@ interface Props {
 
 const List = ({ id, index, title, listItemIds }: Props) => {
   const { listItems } = useLists();
+  const [showRemoveButton, setShowRemoveButton] = useState(false);
 
-  return useMemo(
-    () => (
-      <Draggable draggableId={id} index={index}>
-        {(provided) => (
-          <Container {...provided.draggableProps} ref={provided.innerRef}>
+  const onMouseOver = () => setShowRemoveButton(true);
+
+  const onMouseLeave = () => setShowRemoveButton(false);
+
+  const ListItems = useMemo(() => {
+    return listItemIds.map((listItemId, index) => {
+      const listItem = listItems[listItemId];
+
+      return (
+        <ListItem
+          key={listItemId}
+          id={listItemId}
+          content={listItem.content}
+          index={index}
+        />
+      );
+    });
+  }, [listItemIds, listItems]);
+
+  return (
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (
+        <Container {...provided.draggableProps} ref={provided.innerRef}>
+          <StyledTopSection
+            onMouseOver={onMouseOver}
+            onMouseLeave={onMouseLeave}
+          >
             <Title {...provided.dragHandleProps}>{title}</Title>
-            <Droppable droppableId={id} type="listItem">
-              {(provided, snapshot) => (
-                <ListItemsContainer
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  {listItemIds
-                    .map((listItemId) => listItems[listItemId])
-                    .map((listItem, index) => (
-                      <ListItem
-                        key={listItem.id}
-                        id={listItem.id}
-                        content={listItem.content}
-                        index={index}
-                      />
-                    ))}
-                  {provided.placeholder}
-                  <NewlistItemInput listId={id} />
-                </ListItemsContainer>
-              )}
-            </Droppable>
-          </Container>
-        )}
-      </Draggable>
-    ),
-    [listItemIds, index]
+            {showRemoveButton && <RemoveButton listId={id} />}
+          </StyledTopSection>
+          <Droppable droppableId={id} type="listItem">
+            {(provided, snapshot) => (
+              <ListItemsContainer
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                isDraggingOver={snapshot.isDraggingOver}
+              >
+                {ListItems}
+                {provided.placeholder}
+              </ListItemsContainer>
+            )}
+          </Droppable>
+          <NewlistItemInput listId={id} />
+        </Container>
+      )}
+    </Draggable>
   );
 };
 

@@ -164,6 +164,16 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setListItems(newListItems);
   };
 
+  const removeList = (listId: string) => {
+    const newListOrder = listOrder.filter((id) => id !== listId);
+    setListOrder(newListOrder);
+
+    const newLists = { ...lists };
+    delete newLists[listId];
+
+    setLists(newLists);
+  };
+
   const value: ListsContextType = {
     lists,
     listItems,
@@ -175,6 +185,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     addListItem,
     renameListItem,
     removeListItem,
+    removeList,
   };
 
   return (
