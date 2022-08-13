@@ -33,7 +33,10 @@ export const Input = styled(MuiInput)`
   width: 100%;
 `;
 
-export const ListItemTitle = styled(Typography)`
+export const ListItemTitle = styled(Typography)``;
+
+export const ListItemContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -6,7 +6,7 @@ import { useLists } from '~/context/lists';
 import { ListItem as ListItemType } from '~/types';
 
 import RemoveButton from './RemoveButton';
-import { Container, Input, ListItemTitle } from './styles';
+import { Container, Input, ListItemContainer, ListItemTitle } from './styles';
 
 interface Props extends ListItemType {
   index: number;
@@ -24,6 +24,8 @@ const ListItem = ({ id, content, index }: Props) => {
   };
 
   const onBlur = () => {
+    setIsEditing(false);
+    renameListItem(id, textFieldValue);
     setIsEditing(false);
   };
 
@@ -66,10 +68,13 @@ const ListItem = ({ id, content, index }: Props) => {
               />
             </form>
           ) : (
-            <ListItemTitle>{textFieldValue}</ListItemTitle>
+            <>
+              <ListItemContainer>
+                <ListItemTitle>{textFieldValue}</ListItemTitle>
+                {showRemoveButton && !isEditing && <RemoveButton id={id} />}
+              </ListItemContainer>
+            </>
           )}
-
-          {showRemoveButton && !isEditing && <RemoveButton id={id} />}
         </Container>
       )}
     </Draggable>

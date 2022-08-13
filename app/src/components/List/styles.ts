@@ -22,6 +22,7 @@ export const ListItemsContainer = styled.div<{ isDraggingOver: boolean }>`
   background-color: ${(props) => (props.isDraggingOver ? '#e0f7fa' : 'white')};
   flex-grow: 1;
   min-height: 100px;
+  padding: 16px 8px;
 `;
 
 export const TopSection = styled.div`

@@ -28,6 +28,7 @@ const NewlistItemInput = ({ listId }: Props) => {
         placeholder="+ List item"
         value={textFieldValue}
         onChange={onChange}
+        disableUnderline
       />
     </form>
   );

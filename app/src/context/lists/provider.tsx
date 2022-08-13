@@ -125,6 +125,8 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
   };
 
   const renameListItem = (listItemId: string, content: string) => {
+    console.log('renameListItem', listItemId, content);
+
     const newListItems = {
       ...listItems,
       [listItemId]: {

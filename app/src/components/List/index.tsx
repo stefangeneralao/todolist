@@ -22,11 +22,11 @@ interface Props {
 
 const List = ({ id, index, title, listItemIds }: Props) => {
   const { listItems } = useLists();
-  const [showRemoveButton, setShowRemoveButton] = useState(false);
+  const [showActions, setShowActions] = useState(false);
 
-  const onMouseOver = () => setShowRemoveButton(true);
+  const onMouseOver = () => setShowActions(true);
 
-  const onMouseLeave = () => setShowRemoveButton(false);
+  const onMouseLeave = () => setShowActions(false);
 
   const ListItems = useMemo(() => {
     return listItemIds.map((listItemId, index) => {
@@ -46,15 +46,17 @@ const List = ({ id, index, title, listItemIds }: Props) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
-        <Container {...provided.draggableProps} ref={provided.innerRef}>
-          <StyledTopSection
-            onMouseOver={onMouseOver}
-            onMouseLeave={onMouseLeave}
-          >
+        <Container
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+          onMouseOver={onMouseOver}
+          onMouseLeave={onMouseLeave}
+        >
+          <StyledTopSection>
             <Title variant="h3" {...provided.dragHandleProps}>
               {title}
             </Title>
-            {showRemoveButton && <RemoveButton listId={id} />}
+            {showActions && <RemoveButton listId={id} />}
           </StyledTopSection>
           <Droppable droppableId={id} type="listItem">
             {(provided, snapshot) => (
