@@ -1,13 +1,25 @@
-import { InitialData } from '~/types';
+import { ListItems, Lists } from '~/types';
 
-export const listItems = {
-  'listItem-1': { id: 'listItem-1', content: 'Gör klart kodprov' },
-  'listItem-2': { id: 'listItem-2', content: 'Mejla Khodor' },
-  'listItem-3': { id: 'listItem-3', content: 'Städa' },
-  'listItem-4': { id: 'listItem-4', content: 'Laga mat' },
+export const listItems: ListItems = {
+  'listItem-1': {
+    id: 'listItem-1',
+    title: 'Gör klart kodprov',
+    description: 'Just do it',
+  },
+  'listItem-2': {
+    id: 'listItem-2',
+    title: 'Mejla Khodor',
+    description: 'Just do it... later',
+  },
+  'listItem-3': {
+    id: 'listItem-3',
+    title: 'Städa',
+    description: "Just don't",
+  },
+  'listItem-4': { id: 'listItem-4', title: 'Laga mat' },
 };
 
-export const lists = {
+export const lists: Lists = {
   'list-1': {
     id: 'list-1',
     title: 'To do',
@@ -25,7 +37,7 @@ export const lists = {
   },
 };
 
-export const listOrder = ['list-1', 'list-2', 'list-3'];
+export const listOrder: string[] = ['list-1', 'list-2', 'list-3'];
 
 export default {
   listItems,

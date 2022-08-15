@@ -1,16 +1,17 @@
 import { DraggableLocation } from 'react-beautiful-dnd';
-import { ListItem, List } from '~/types';
+import { ListItems, Lists } from '~/types';
 
 export interface ListsContextType {
-  listItems: { [key: string]: ListItem };
-  lists: { [key: string]: List };
+  listItems: ListItems;
+  lists: Lists;
   listOrder: string[];
   reorderList: ReorderList;
   moveListItem: MoveListItem;
   reorderListItem: ReorderListItem;
   addList: AddList;
   addListItem: AddListItem;
-  renameListItem: RenameListItem;
+  setListItemTitle: SetListItemTitle;
+  setListItemDescription: SetListItemDescription;
   removeListItem: RemoveListItem;
   removeList: RemoveList;
 }
@@ -23,12 +24,16 @@ export interface RemoveListItem {
   (listItemId: string): void;
 }
 
-export interface RenameListItem {
-  (listItemId: string, content: string): void;
+export interface SetListItemTitle {
+  (listItemId: string, title: string): void;
+}
+
+export interface SetListItemDescription {
+  (listItemId: string, description: string): void;
 }
 
 export interface AddListItem {
-  (listId: string, content: string): void;
+  (listId: string, title: string): void;
 }
 
 export interface AddList {

@@ -1,5 +1,6 @@
 import Modal from '~/components/Modal';
 
+import Description from './Description';
 import Title from './Title';
 
 interface Props {
@@ -9,23 +10,23 @@ interface Props {
   title: string;
   description?: string;
   onTitleSubmit: (value: string) => void;
+  onDescriptionSubmit: (value: string) => void;
 }
 
 const ListItemModal = ({
   open,
-  onClose,
   title,
   description,
+  onClose,
   onTitleSubmit,
-}: Props) => {
-  return (
-    <Modal open={open} onClose={onClose}>
-      <div>
-        <Title value={title} onSubmit={onTitleSubmit} />
-        <p>{description}</p>
-      </div>
-    </Modal>
-  );
-};
+  onDescriptionSubmit,
+}: Props) => (
+  <Modal open={open} onClose={onClose}>
+    <div>
+      <Title value={title} onSubmit={onTitleSubmit} />
+      <Description value={description} onSubmit={onDescriptionSubmit} />
+    </div>
+  </Modal>
+);
 
 export default ListItemModal;

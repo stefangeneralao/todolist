@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { List, ListItem } from '~/types';
+import { List, ListItem, ListItems, Lists } from '~/types';
 import {
   listItems as mockedlistItems,
   lists as mockedlists,
@@ -17,10 +17,8 @@ import {
 import { ListsContext } from './context';
 
 export const ListsProvider = ({ children }: ListsProviderProps) => {
-  const [listItems, setListItems] = useState<{ [key: string]: ListItem }>(
-    mockedlistItems
-  );
-  const [lists, setLists] = useState<{ [key: string]: List }>(mockedlists);
+  const [listItems, setListItems] = useState<ListItems>(mockedlistItems);
+  const [lists, setLists] = useState<Lists>(mockedlists);
   const [listOrder, setListOrder] = useState<string[]>(mockedlistOrder);
 
   const reorderList: ReorderList = ({ source, destination, draggableId }) => {
@@ -99,12 +97,12 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
-  const addListItem = (listId: string, content: string) => {
+  const addListItem = (listId: string, title: string) => {
     const listItemId = crypto.randomUUID();
 
     const newListItem: ListItem = {
       id: listItemId,
-      content,
+      title,
     };
 
     const newListItems = {
@@ -124,14 +122,24 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
-  const renameListItem = (listItemId: string, content: string) => {
-    console.log('renameListItem', listItemId, content);
-
-    const newListItems = {
+  const setListItemTitle = (listItemId: string, title: string) => {
+    const newListItems: ListItems = {
       ...listItems,
       [listItemId]: {
         ...listItems[listItemId],
-        content,
+        title,
+      },
+    };
+
+    setListItems(newListItems);
+  };
+
+  const setListItemDescription = (listItemId: string, description: string) => {
+    const newListItems: ListItems = {
+      ...listItems,
+      [listItemId]: {
+        ...listItems[listItemId],
+        description,
       },
     };
 
@@ -185,7 +193,8 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     reorderListItem,
     addList,
     addListItem,
-    renameListItem,
+    setListItemTitle,
+    setListItemDescription,
     removeListItem,
     removeList,
   };

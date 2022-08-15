@@ -36,7 +36,8 @@ const List = ({ id, index, title, listItemIds }: Props) => {
         <ListItem
           key={listItemId}
           id={listItemId}
-          content={listItem.content}
+          title={listItem.title}
+          description={listItem.description}
           index={index}
         />
       );

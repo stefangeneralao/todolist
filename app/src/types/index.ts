@@ -1,6 +1,11 @@
 export interface ListItem {
   id: string;
-  content: string;
+  title: string;
+  description?: string;
+}
+
+export interface ListItems {
+  [key: string]: ListItem;
 }
 
 export interface List {
@@ -9,8 +14,6 @@ export interface List {
   listItemIds: string[];
 }
 
-export interface InitialData {
-  listItems: { [key: string]: ListItem };
-  lists: { [key: string]: List };
-  listOrder: string[];
+export interface Lists {
+  [key: string]: List;
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { useLists } from '~/context/lists';
@@ -12,12 +12,11 @@ interface Props extends ListItemType {
   index: number;
 }
 
-const ListItem = ({ id, content, index }: Props) => {
-  const [listItemTitle, setListItemTitle] = useState(content);
+const ListItem = ({ id, title, description, index }: Props) => {
   const [showRemoveButton, setShowRemoveButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { renameListItem } = useLists();
+  const { setListItemTitle, setListItemDescription } = useLists();
 
   const onClick = () => {
     setIsModalOpen(true);
@@ -28,9 +27,27 @@ const ListItem = ({ id, content, index }: Props) => {
   const onMouseLeave = () => setShowRemoveButton(false);
 
   const onTitleSubmit = (value: string) => {
-    renameListItem(id, value);
-    setListItemTitle(value);
+    setListItemTitle(id, value);
   };
+
+  const onDescriptionSubmit = (value: string) => {
+    setListItemDescription(id, value);
+  };
+
+  const memoizedModal = useMemo(
+    () => (
+      <Modal
+        id={id}
+        open={isModalOpen}
+        title={title}
+        description={description}
+        onClose={() => setIsModalOpen(false)}
+        onTitleSubmit={onTitleSubmit}
+        onDescriptionSubmit={onDescriptionSubmit}
+      />
+    ),
+    [isModalOpen, title, description]
+  );
 
   return (
     <>
@@ -46,20 +63,14 @@ const ListItem = ({ id, content, index }: Props) => {
             onMouseLeave={onMouseLeave}
           >
             <ListItemContainer>
-              <ListItemTitle>{listItemTitle}</ListItemTitle>
+              <ListItemTitle>{title}</ListItemTitle>
               {showRemoveButton && <RemoveButton id={id} />}
             </ListItemContainer>
           </Container>
         )}
       </Draggable>
 
-      <Modal
-        id={id}
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={listItemTitle}
-        onTitleSubmit={onTitleSubmit}
-      />
+      {memoizedModal}
     </>
   );
 };
