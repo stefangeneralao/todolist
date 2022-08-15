@@ -3,9 +3,8 @@ import { Input as MuiInput, Typography } from '@material-ui/core';
 
 export const Container = styled.div<{
   isDragging: boolean;
-  isEditing: boolean;
 }>`
-  ${({ isDragging, isEditing }) => `
+  ${({ isDragging }) => `
     display: grid;
     height: 30px;
     grid-template-columns: 1fr auto;
@@ -15,11 +14,7 @@ export const Container = styled.div<{
     background-color: white;
     transition: background-color 0.2s ease;
     box-shadow: ${
-      isDragging
-        ? `0px 3px 9px #00000033`
-        : isEditing
-        ? `0px 0px 10px #00cccc77`
-        : `0px 1px 3px #00000033`
+      isDragging ? `0px 3px 9px #00000033` : `0px 1px 3px #00000033`
     }
   `}
 `;

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { Typography } from '@material-ui/core';
 
 import { useLists } from '~/context/lists';
 import { ListItem as ListItemType } from '~/types';
 
 import RemoveButton from './RemoveButton';
+import Modal from './ListItemModal';
 import { Container, Input, ListItemContainer, ListItemTitle } from './styles';
 
 interface Props extends ListItemType {
@@ -13,71 +13,54 @@ interface Props extends ListItemType {
 }
 
 const ListItem = ({ id, content, index }: Props) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [textFieldValue, setTextFieldValue] = useState(content);
+  const [listItemTitle, setListItemTitle] = useState(content);
   const [showRemoveButton, setShowRemoveButton] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { renameListItem } = useLists();
 
   const onClick = () => {
-    setIsEditing(true);
-  };
-
-  const onBlur = () => {
-    setIsEditing(false);
-    renameListItem(id, textFieldValue);
-    setIsEditing(false);
-  };
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTextFieldValue(event.target.value);
-  };
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    renameListItem(id, textFieldValue);
-    setIsEditing(false);
+    setIsModalOpen(true);
   };
 
   const onMouseOver = () => setShowRemoveButton(true);
 
   const onMouseLeave = () => setShowRemoveButton(false);
 
+  const onTitleSubmit = (value: string) => {
+    renameListItem(id, value);
+    setListItemTitle(value);
+  };
+
   return (
-    <Draggable draggableId={id} index={index}>
-      {(provided, snapshot) => (
-        <Container
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-          isDragging={snapshot.isDragging}
-          onClick={onClick}
-          isEditing={isEditing}
-          onMouseOver={onMouseOver}
-          onMouseLeave={onMouseLeave}
-        >
-          {isEditing ? (
-            <form onSubmit={onSubmit}>
-              <Input
-                type="text"
-                value={textFieldValue}
-                onBlur={onBlur}
-                onChange={onChange}
-                autoFocus
-                disableUnderline
-              />
-            </form>
-          ) : (
-            <>
-              <ListItemContainer>
-                <ListItemTitle>{textFieldValue}</ListItemTitle>
-                {showRemoveButton && !isEditing && <RemoveButton id={id} />}
-              </ListItemContainer>
-            </>
-          )}
-        </Container>
-      )}
-    </Draggable>
+    <>
+      <Draggable draggableId={id} index={index}>
+        {(provided, snapshot) => (
+          <Container
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            isDragging={snapshot.isDragging}
+            onClick={onClick}
+            onMouseOver={onMouseOver}
+            onMouseLeave={onMouseLeave}
+          >
+            <ListItemContainer>
+              <ListItemTitle>{listItemTitle}</ListItemTitle>
+              {showRemoveButton && <RemoveButton id={id} />}
+            </ListItemContainer>
+          </Container>
+        )}
+      </Draggable>
+
+      <Modal
+        id={id}
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={listItemTitle}
+        onTitleSubmit={onTitleSubmit}
+      />
+    </>
   );
 };
 
