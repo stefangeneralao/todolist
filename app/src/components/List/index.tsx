@@ -32,6 +32,8 @@ const List = ({ id, index, title, listItemIds }: Props) => {
     return listItemIds.map((listItemId, index) => {
       const listItem = listItems[listItemId];
 
+      if (!listItem) return;
+
       return (
         <ListItem
           key={listItemId}

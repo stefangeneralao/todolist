@@ -45,6 +45,7 @@ const Lists = () => {
           <Container {...provided.droppableProps} ref={provided.innerRef}>
             {listOrder.map((listId, index) => {
               const list = lists[listId];
+              if (!list) return;
 
               return (
                 <List

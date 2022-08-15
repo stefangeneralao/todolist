@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { List, ListItem, ListItems, Lists } from '~/types';
 import {
@@ -17,9 +17,45 @@ import {
 import { ListsContext } from './context';
 
 export const ListsProvider = ({ children }: ListsProviderProps) => {
-  const [listItems, setListItems] = useState<ListItems>(mockedlistItems);
-  const [lists, setLists] = useState<Lists>(mockedlists);
-  const [listOrder, setListOrder] = useState<string[]>(mockedlistOrder);
+  const [listItems, setListItems] = useState<ListItems>({});
+  const [lists, setLists] = useState<Lists>({});
+  const [listOrder, setListOrder] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getLists = async () => {
+      const response = await fetch('http://localhost:3001/lists');
+      const json = await response.json();
+      try {
+        setLists(json);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    const getListOrder = async () => {
+      const response = await fetch('http://localhost:3001/list-order');
+      const json = await response.json();
+      try {
+        setListOrder(json);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    const getListItems = async () => {
+      const response = await fetch('http://localhost:3001/list-items');
+      const json = await response.json();
+      try {
+        setListItems(json);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    getLists();
+    getListOrder();
+    getListItems();
+  }, []);
 
   const reorderList: ReorderList = ({ source, destination, draggableId }) => {
     const newListOrder = Array.from(listOrder);
