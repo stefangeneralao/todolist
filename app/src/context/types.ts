@@ -49,7 +49,7 @@ export interface ReorderList {
     source: DraggableLocation;
     destination: DraggableLocation;
     draggableId: string;
-  }): void;
+  }): Promise<void>;
 }
 
 export interface MoveListItem {

@@ -56,12 +56,24 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     getListItems();
   }, []);
 
-  const reorderList: ReorderList = ({ source, destination, draggableId }) => {
+  const reorderList: ReorderList = async ({
+    source,
+    destination,
+    draggableId,
+  }) => {
+    const currentListOrder = [...listOrder];
+
     const newListOrder = Array.from(listOrder);
     newListOrder.splice(source.index, 1);
     newListOrder.splice(destination.index, 0, draggableId);
 
     setListOrder(newListOrder);
+    try {
+      await Api.reorderList(newListOrder);
+    } catch (error) {
+      console.log('error', error);
+      setListOrder(currentListOrder);
+    }
   };
 
   const moveListItem: MoveListItem = ({ source, destination, draggableId }) => {
