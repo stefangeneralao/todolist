@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { List, ListItem, ListItems, Lists } from '~/types';
+import { ListItem, ListItems, Lists } from '/types';
 
 import {
   AddList,
@@ -73,27 +73,34 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     } catch (error) {
       console.log('error', error);
       setListOrder(currentListOrder);
+      throw new Error(`Could not reorder list: ${error}`);
     }
   };
 
-  const moveListItem: MoveListItem = ({ source, destination, draggableId }) => {
-    const currentList = lists[source.droppableId];
-    const previousList = lists[destination.droppableId];
+  const moveListItem: MoveListItem = async ({
+    source,
+    destination,
+    draggableId,
+  }) => {
+    const currentLists = { ...lists };
 
-    const currentListItemIds = Array.from(currentList.listItemIds);
-    currentListItemIds.splice(source.index, 1);
+    const sourceList = lists[source.droppableId];
+    const destinationList = lists[destination.droppableId];
+
+    const sourceListItemIds = Array.from(sourceList.listItemIds);
+    sourceListItemIds.splice(source.index, 1);
     const newStart = {
-      ...currentList,
-      listItemIds: currentListItemIds,
+      ...sourceList,
+      listItemIds: sourceListItemIds,
     };
 
-    const previousListItemIds = Array.from(previousList.listItemIds);
-    previousListItemIds.splice(destination.index, 0, draggableId);
+    const destinationListItemIds = Array.from(destinationList.listItemIds);
+    destinationListItemIds.splice(destination.index, 0, draggableId);
     const newFinish = {
-      ...previousList,
-      listItemIds: previousListItemIds,
+      ...destinationList,
+      listItemIds: destinationListItemIds,
     };
-
+    
     const newLists = {
       ...lists,
       [newStart.id]: newStart,
@@ -101,21 +108,35 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     };
 
     setLists(newLists);
+    try {
+      await Api.moveListItem(
+        draggableId,
+        sourceList.id,
+        destinationList.id,
+        destinationListItemIds,
+      );
+    } catch (error) {
+      console.log('error', error);
+      setLists(currentLists);
+      throw new Error(`Could not move list item: ${error}`);
+    }
   };
 
-  const reorderListItem: ReorderListItem = ({
+  const reorderListItem: ReorderListItem = async ({
     source,
     destination,
     draggableId,
   }) => {
-    const currentList = lists[source.droppableId];
-    const currentListItemIds = Array.from(currentList.listItemIds);
-    currentListItemIds.splice(source.index, 1);
-    currentListItemIds.splice(destination.index, 0, draggableId);
+    const currentLists = { ...lists };
+
+    const sourceList = lists[source.droppableId];
+    const sourceListItemIds = Array.from(sourceList.listItemIds);
+    sourceListItemIds.splice(source.index, 1);
+    sourceListItemIds.splice(destination.index, 0, draggableId);
 
     const newList = {
-      ...currentList,
-      listItemIds: currentListItemIds,
+      ...sourceList,
+      listItemIds: sourceListItemIds,
     };
 
     const newLists = {
@@ -124,53 +145,74 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     };
 
     setLists(newLists);
+    try {
+      await Api.updateListItemsIds(newList.id, sourceListItemIds);
+    } catch (error) {
+      setLists(currentLists);
+      throw new Error(`Could not reorder list item: ${error}`);
+    }
   };
 
-  const addList: AddList = (title: string) => {
-    const id = crypto.randomUUID();
+  const addList: AddList = async (title: string) => {
+    const currentLists = { ...lists };
+    const currentListOrder = [...listOrder];
 
-    const newList: List = {
-      id,
-      title,
-      listItemIds: [],
-    };
-
-    const newLists = {
-      ...lists,
-      [newList.id]: newList,
-    };
-
-    setListOrder([...listOrder, id]);
-    setLists(newLists);
+    const addListToState = (listId: string) => {
+      const newList = {
+        id: listId,
+        title,
+        listItemIds: [],
+      };
+      const newLists = { ...currentLists, [listId]: newList };
+      setLists(newLists);
+      setListOrder([...currentListOrder, listId]);
+    }
+    
+    const listId = crypto.randomUUID();
+    addListToState(listId);
+    try {
+      const newListId = await Api.addList(title);
+      addListToState(newListId);
+      setListOrder([...currentListOrder, newListId]);
+    } catch (error) {
+      setLists(currentLists);
+      setListOrder(currentListOrder);
+      throw new Error(`Could not add list: ${error}`);
+    }
   };
 
   const addListItem: AddListItem = async (listId: string, title: string) => {
     const currentListItems = { ...listItems };
     const currentLists = { ...lists };
 
-    const listItemId = crypto.randomUUID();
-    const newListItem: ListItem = {
-      id: listItemId,
-      title,
+    const addListItemToState = (listItemId: string) => {
+      const newListItem: ListItem = {
+        id: listItemId,
+        title,
+      };
+  
+      const newListItems = {
+        ...currentListItems,
+        [listItemId]: newListItem,
+      };
+  
+      const newLists = {
+        ...currentLists,
+        [listId]: {
+          ...currentLists[listId],
+          listItemIds: [...currentLists[listId].listItemIds, listItemId],
+        },
+      };
+  
+      setListItems(newListItems);
+      setLists(newLists);
     };
-
-    const newListItems = {
-      ...listItems,
-      [listItemId]: newListItem,
-    };
-
-    const newLists = {
-      ...lists,
-      [listId]: {
-        ...lists[listId],
-        listItemIds: [...lists[listId].listItemIds, listItemId],
-      },
-    };
-
-    setListItems(newListItems);
-    setLists(newLists);
+    
+    const optimisticListItemId = crypto.randomUUID();
+    addListItemToState(optimisticListItemId);
     try {
-      await Api.addListItem(listId, title);
+      const newListItemId = await Api.addListItem(listId, title);
+      addListItemToState(newListItemId);
     } catch (error) {
       setListItems(currentListItems);
       setLists(currentLists);
@@ -263,13 +305,22 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
   };
 
   const removeList: RemoveList = (listId: string) => {
+    const currentLists = { ...lists };
+    const currentListOrder = [...listOrder];
+    
     const newListOrder = listOrder.filter((id) => id !== listId);
-    setListOrder(newListOrder);
-
     const newLists = { ...lists };
     delete newLists[listId];
 
+    setListOrder(newListOrder);
     setLists(newLists);
+    try {
+      Api.deleteList(listId);
+    } catch (error) {
+      setListOrder(currentListOrder);
+      setLists(currentLists);
+      throw new Error(`Error deleting list: ${error}`);
+    }
   };
 
   const value: ListsContextType = {

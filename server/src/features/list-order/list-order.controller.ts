@@ -1,14 +1,24 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 
-import MongodbAdapter from '~/db_adapters/mongodb';
+import MongoDBAdapter from '~/db_adapters/MongoDBAdapter';
 
 const router = Router();
 
 router.get('/', async (_, res: Response) => {
-  console.log('GET /list-order');
   try {
-    const listOrder = await MongodbAdapter.getListOrder();
+    const listOrder = await MongoDBAdapter.getListOrder();
     res.send(listOrder);
+  } catch {
+    res.sendStatus(500);
+  }
+});
+
+router.put('/', async (req: Request, res: Response) => {
+  const { listOrder } = req.body;
+
+  try {
+    await MongoDBAdapter.reorderList(listOrder);
+    res.send();
   } catch {
     res.sendStatus(500);
   }

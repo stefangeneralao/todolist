@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { useLists } from '~/context';
-import { ListItem as ListItemType } from '~/types';
+import { ListItem as ListItemType } from '/types';
 
 import RemoveButton from './RemoveButton';
 import Modal from './ListItemModal';

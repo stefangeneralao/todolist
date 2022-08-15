@@ -1,4 +1,4 @@
-import { ListItems, Lists } from '~/types';
+import { ListItems, Lists } from '/types';
 
 export const listItems: ListItems = {
   'listItem-1': {

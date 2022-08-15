@@ -5,7 +5,7 @@ export interface ListItem {
 }
 
 export interface ListItems {
-  [key: string]: ListItem;
+  [listItemId: string]: ListItem;
 }
 
 export interface List {
@@ -15,5 +15,5 @@ export interface List {
 }
 
 export interface Lists {
-  [key: string]: List;
+  [listId: string]: List;
 }

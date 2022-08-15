@@ -1,5 +1,5 @@
 import { DraggableLocation } from 'react-beautiful-dnd';
-import { ListItems, Lists } from '~/types';
+import { ListItems, Lists } from '/types';
 
 export interface ListsContextType {
   listItems: ListItems;
