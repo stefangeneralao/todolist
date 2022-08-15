@@ -25,11 +25,11 @@ export interface RemoveListItem {
 }
 
 export interface SetListItemTitle {
-  (listItemId: string, title: string): void;
+  (listItemId: string, title: string): Promise<void>;
 }
 
 export interface SetListItemDescription {
-  (listItemId: string, description: string): void;
+  (listItemId: string, description: string): Promise<void>;
 }
 
 export interface AddListItem {

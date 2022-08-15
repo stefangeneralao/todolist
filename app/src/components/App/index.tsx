@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
-import { ListsProvider } from '~/context/lists';
+import { ListsProvider } from '~/context';
 import Lists from '~/components/Lists';
 import NewListInput from '~/components/NewListInput';
 

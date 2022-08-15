@@ -1,7 +1,7 @@
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import List from '~/components/List';
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 
 import { Container } from './styles';
 

@@ -1,4 +1,4 @@
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 import { Button } from './styles';
 
 interface Props {

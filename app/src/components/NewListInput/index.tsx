@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 
 import { Form, Input } from './styles';
 

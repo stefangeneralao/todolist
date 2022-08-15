@@ -4,7 +4,7 @@ import { Input, makeStyles } from '@material-ui/core';
 
 interface Props {
   value: string;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string) => Promise<void>;
 }
 
 const useStyles = makeStyles({
@@ -22,13 +22,21 @@ const Title = ({ value: initialValue, onSubmit: onSubmitTitle }: Props) => {
     setValue(event.target.value);
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmitTitle(value);
+    try {
+      await onSubmitTitle(value);
+    } catch {
+      setValue(initialValue);
+    }
   };
 
-  const onBlur = () => {
-    onSubmitTitle(value);
+  const onBlur = async () => {
+    try {
+      await onSubmitTitle(value);
+    } catch {
+      setValue(initialValue);
+    }
   };
 
   return (

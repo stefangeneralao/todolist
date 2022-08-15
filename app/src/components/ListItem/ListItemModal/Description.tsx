@@ -4,7 +4,7 @@ import { Input } from '@material-ui/core';
 
 interface Props {
   value?: string;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string) => Promise<void>;
 }
 
 const Description = ({
@@ -17,13 +17,21 @@ const Description = ({
     setValue(event.target.value);
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmitDescription(value);
+    try {
+      await onSubmitDescription(value);
+    } catch {
+      setValue(initialValue || '');
+    }
   };
 
-  const onBlur = () => {
-    onSubmitDescription(value);
+  const onBlur = async () => {
+    try {
+      await onSubmitDescription(value);
+    } catch {
+      setValue(initialValue || '');
+    }
   };
 
   return (

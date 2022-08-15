@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 import { Input } from './styles';
 
 interface Props {

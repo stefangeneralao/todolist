@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 import { ListItem as ListItemType } from '~/types';
 
 import RemoveButton from './RemoveButton';
@@ -26,12 +26,12 @@ const ListItem = ({ id, title, description, index }: Props) => {
 
   const onMouseLeave = () => setShowRemoveButton(false);
 
-  const onTitleSubmit = (value: string) => {
-    setListItemTitle(id, value);
+  const onTitleSubmit = async (value: string) => {
+    await setListItemTitle(id, value);
   };
 
-  const onDescriptionSubmit = (value: string) => {
-    setListItemDescription(id, value);
+  const onDescriptionSubmit = async (value: string) => {
+    await setListItemDescription(id, value);
   };
 
   const memoizedModal = useMemo(
@@ -70,7 +70,15 @@ const ListItem = ({ id, title, description, index }: Props) => {
         )}
       </Draggable>
 
-      {memoizedModal}
+      <Modal
+        id={id}
+        open={isModalOpen}
+        title={title}
+        description={description}
+        onClose={() => setIsModalOpen(false)}
+        onTitleSubmit={onTitleSubmit}
+        onDescriptionSubmit={onDescriptionSubmit}
+      />
     </>
   );
 };

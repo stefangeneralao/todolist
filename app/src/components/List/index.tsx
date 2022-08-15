@@ -3,7 +3,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import ListItem from '~/components/ListItem';
 import NewlistItemInput from '~/components/NewListItemInput';
-import { useLists } from '~/context/lists';
+import { useLists } from '~/context';
 
 import RemoveButton from './RemoveButton';
 import {

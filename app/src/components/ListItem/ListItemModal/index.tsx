@@ -9,8 +9,8 @@ interface Props {
   onClose: () => void;
   title: string;
   description?: string;
-  onTitleSubmit: (value: string) => void;
-  onDescriptionSubmit: (value: string) => void;
+  onTitleSubmit: (value: string) => Promise<void>;
+  onDescriptionSubmit: (value: string) => Promise<void>;
 }
 
 const ListItemModal = ({

@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 
 import { List, ListItem, ListItems, Lists } from '~/types';
-import {
-  listItems as mockedlistItems,
-  lists as mockedlists,
-  listOrder as mockedlistOrder,
-} from '~/mocks/lists';
 
 import {
+  AddList,
+  AddListItem,
   ListsContextType,
   ListsProviderProps,
   MoveListItem,
+  RemoveList,
+  RemoveListItem,
   ReorderList,
   ReorderListItem,
+  SetListItemDescription,
+  SetListItemTitle,
 } from './types';
 import { ListsContext } from './context';
+import { Api } from '~/api';
 
 export const ListsProvider = ({ children }: ListsProviderProps) => {
   const [listItems, setListItems] = useState<ListItems>({});
@@ -23,30 +25,27 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
 
   useEffect(() => {
     const getLists = async () => {
-      const response = await fetch('http://localhost:3001/lists');
-      const json = await response.json();
       try {
-        setLists(json);
+        const response = await Api.getLists();
+        setLists(response);
       } catch (error) {
         console.log('error', error);
       }
     };
 
     const getListOrder = async () => {
-      const response = await fetch('http://localhost:3001/list-order');
-      const json = await response.json();
       try {
-        setListOrder(json);
+        const response = await Api.getListOrder();
+        setListOrder(response);
       } catch (error) {
         console.log('error', error);
       }
     };
 
     const getListItems = async () => {
-      const response = await fetch('http://localhost:3001/list-items');
-      const json = await response.json();
       try {
-        setListItems(json);
+        const response = await Api.getListItems();
+        setListItems(response);
       } catch (error) {
         console.log('error', error);
       }
@@ -115,7 +114,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
-  const addList = (title: string) => {
+  const addList: AddList = (title: string) => {
     const id = crypto.randomUUID();
 
     const newList: List = {
@@ -133,9 +132,11 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setLists(newLists);
   };
 
-  const addListItem = (listId: string, title: string) => {
-    const listItemId = crypto.randomUUID();
+  const addListItem: AddListItem = async (listId: string, title: string) => {
+    const currentListItems = { ...listItems };
+    const currentLists = { ...lists };
 
+    const listItemId = crypto.randomUUID();
     const newListItem: ListItem = {
       id: listItemId,
       title,
@@ -156,9 +157,21 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
 
     setListItems(newListItems);
     setLists(newLists);
+    try {
+      await Api.addListItem(listId, title);
+    } catch (error) {
+      setListItems(currentListItems);
+      setLists(currentLists);
+      throw new Error(`Error adding list item: ${error}`);
+    }
   };
 
-  const setListItemTitle = (listItemId: string, title: string) => {
+  const setListItemTitle: SetListItemTitle = async (
+    listItemId: string,
+    title: string
+  ) => {
+    const currentListItems = { ...listItems };
+
     const newListItems: ListItems = {
       ...listItems,
       [listItemId]: {
@@ -168,9 +181,20 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     };
 
     setListItems(newListItems);
+    try {
+      await Api.updateListItem(listItemId, { title });
+    } catch (error) {
+      setListItems(currentListItems);
+      throw new Error(`Error updating list item: ${error}`);
+    }
   };
 
-  const setListItemDescription = (listItemId: string, description: string) => {
+  const setListItemDescription: SetListItemDescription = async (
+    listItemId: string,
+    description: string
+  ) => {
+    const currentListItems = { ...listItems };
+
     const newListItems: ListItems = {
       ...listItems,
       [listItemId]: {
@@ -180,9 +204,18 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     };
 
     setListItems(newListItems);
+    try {
+      await Api.updateListItem(listItemId, { description });
+    } catch (error) {
+      setListItems(currentListItems);
+      throw new Error(`Error updating list item: ${error}`);
+    }
   };
 
-  const removeListItem = (listItemId: string) => {
+  const removeListItem: RemoveListItem = async (listItemId: string) => {
+    const currentListItems = { ...listItems };
+    const currentLists = { ...lists };
+
     const parentListEntries = Object.entries(lists);
     const parentListEntry = parentListEntries.find(([_, listValues]) =>
       listValues.listItemIds.includes(listItemId)
@@ -208,9 +241,16 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
 
     setLists(newLists);
     setListItems(newListItems);
+    try {
+      await Api.deleteListItem(listItemId);
+    } catch (error) {
+      setListItems(currentListItems);
+      setLists(currentLists);
+      throw new Error(`Error deleting list item: ${error}`);
+    }
   };
 
-  const removeList = (listId: string) => {
+  const removeList: RemoveList = (listId: string) => {
     const newListOrder = listOrder.filter((id) => id !== listId);
     setListOrder(newListOrder);
 
