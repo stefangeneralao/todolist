@@ -48,6 +48,7 @@ const Title = ({ value: initialValue, onSubmit: onSubmitTitle }: Props) => {
         onChange={onChange}
         onBlur={onBlur}
         disableUnderline
+        placeholder='Add title'
       />
     </form>
   );

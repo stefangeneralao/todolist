@@ -70,15 +70,7 @@ const ListItem = ({ id, title, description, index }: Props) => {
         )}
       </Draggable>
 
-      <Modal
-        id={id}
-        open={isModalOpen}
-        title={title}
-        description={description}
-        onClose={() => setIsModalOpen(false)}
-        onTitleSubmit={onTitleSubmit}
-        onDescriptionSubmit={onDescriptionSubmit}
-      />
+      {memoizedModal}
     </>
   );
 };
