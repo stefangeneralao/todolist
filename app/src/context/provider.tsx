@@ -18,6 +18,7 @@ import {
   ReorderListItem,
   SetListItemDescription,
   SetListItemTitle,
+  SetListTitle,
 } from './types';
 import { ListsContext } from './context';
 
@@ -167,6 +168,22 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       setLists(currentLists);
       setListOrder(currentListOrder);
       enqueueSnackbar('Could not add list', { variant: 'error' });
+    }
+  };
+
+  const setListTitle: SetListTitle = async (listId, title) => {
+    const currentLists = { ...lists };
+    const newLists = {
+      ...currentLists,
+      [listId]: { ...currentLists[listId], title },
+    };
+    setLists(newLists);
+
+    try {
+      await Api.updateListTitle(listId, title);
+    } catch (error) {
+      setLists(currentLists);
+      enqueueSnackbar('Could not update list title', { variant: 'error' });
     }
   };
 
@@ -323,6 +340,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     addListItem,
     setListItemTitle,
     setListItemDescription,
+    setListTitle,
     removeListItem,
     removeList,
   };

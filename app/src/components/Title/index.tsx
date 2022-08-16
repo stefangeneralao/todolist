@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { Input, makeStyles } from '@material-ui/core';
 
 interface Props {
@@ -9,18 +8,14 @@ interface Props {
 
 const useStyles = makeStyles({
   input: {
-    width: '100%',
     fontSize: '1.5rem',
   },
 });
 
 const Title = ({ value: initialValue, onSubmit: onSubmitTitle }: Props) => {
   const [value, setValue] = useState(initialValue);
-  const classes = useStyles();
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
+  const classes = useStyles();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,6 +24,10 @@ const Title = ({ value: initialValue, onSubmit: onSubmitTitle }: Props) => {
     } catch {
       setValue(initialValue);
     }
+  };
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
   };
 
   const onBlur = async () => {

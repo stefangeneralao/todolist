@@ -3,14 +3,16 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import ListItem from '~/components/ListItem';
 import NewlistItemInput from '~/components/NewListItemInput';
+import Title from '~/components/Title';
+
 import { useLists } from '~/context';
 
 import RemoveButton from './RemoveButton';
 import {
   Container,
   ListItemsContainer,
-  Title,
   TopSection as StyledTopSection,
+  TitleContainer,
 } from './styles';
 
 interface Props {
@@ -24,11 +26,17 @@ const List = ({ id, index, title, listItemIds }: Props) => {
   const { listItems } = useLists();
   const [showActions, setShowActions] = useState(false);
 
+  const { setListTitle } = useLists();
+
+  const isMobile = 'ontouchstart' in document.documentElement;
+
   const onMouseOver = () => setShowActions(true);
 
   const onMouseLeave = () => setShowActions(false);
 
-  const isMobile = 'ontouchstart' in document.documentElement;
+  const onTitleSubmit = async (value: string) => {
+    await setListTitle(id, value);
+  };
 
   const ListItems = useMemo(() => {
     return listItemIds.map((listItemId, index) => {
@@ -58,10 +66,12 @@ const List = ({ id, index, title, listItemIds }: Props) => {
           onMouseLeave={onMouseLeave}
         >
           <StyledTopSection>
-            <Title variant="h3" {...provided.dragHandleProps}>
-              {title}
-            </Title>
-            <RemoveButton listId={id} show={isMobile || showActions} />
+            <TitleContainer {...provided.dragHandleProps}>
+              <Title value={title} onSubmit={onTitleSubmit} />
+            </TitleContainer>
+            <div>
+              <RemoveButton listId={id} show={isMobile || showActions} />
+            </div>
           </StyledTopSection>
 
           <Droppable droppableId={id} type="listItem">

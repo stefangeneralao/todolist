@@ -40,6 +40,9 @@ const moveListItem = (
 const updateListItemsIds = (listId: string, listItemIds: string[]) =>
   Api.patch(`${Api.baseurl}/lists/${listId}`, { listItemIds });
 
+const updateListTitle = (listId: string, title: string) =>
+  Api.patch(`${Api.baseurl}/lists/${listId}`, { title });
+
 export class Api {
   static baseurl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
@@ -56,6 +59,7 @@ export class Api {
   static deleteListItem = deleteListItem;
   static moveListItem = moveListItem;
   static updateListItemsIds = updateListItemsIds;
+  static updateListTitle = updateListTitle;
 
   static get = async (url: string) => {
     const response = await axios.get(url);

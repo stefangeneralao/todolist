@@ -12,6 +12,7 @@ export interface ListsContextType {
   addListItem: AddListItem;
   setListItemTitle: SetListItemTitle;
   setListItemDescription: SetListItemDescription;
+  setListTitle: SetListTitle;
   removeListItem: RemoveListItem;
   removeList: RemoveList;
 }
@@ -30,6 +31,10 @@ export interface SetListItemTitle {
 
 export interface SetListItemDescription {
   (listItemId: string, description: string): Promise<void>;
+}
+
+export interface SetListTitle {
+  (listId: string, title: string): Promise<void>;
 }
 
 export interface AddListItem {

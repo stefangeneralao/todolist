@@ -1,8 +1,8 @@
 import Modal from '~/components/Modal';
+import Title from '~/components/Title';
 
 import Description from './Description';
 import RemoveButton from './RemoveButton';
-import Title from './Title';
 
 interface Props {
   id: string;

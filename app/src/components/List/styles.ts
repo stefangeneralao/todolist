@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 import { Typography } from '@material-ui/core';
+import { Button as MuiButton } from '@material-ui/core';
+
+export const Button = styled(MuiButton)`
+  float: right;
+  height: inherit;
+`;
 
 export const Container = styled.div`
   margin: 8px;
@@ -29,4 +35,8 @@ export const TopSection = styled.div`
   display: grid;
   grid-template-columns: auto min-content;
   margin-bottom: 12px;
+`;
+
+export const TitleContainer = styled.div`
+  width: 150px;
 `;
