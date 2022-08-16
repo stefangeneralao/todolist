@@ -41,7 +41,7 @@ const updateListItemsIds = (listId: string, listItemIds: string[]) =>
   Api.patch(`${Api.baseurl}/lists/${listId}`, { listItemIds });
 
 export class Api {
-  static baseurl = 'http://192.168.0.2:3001';
+  static baseurl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
   static getListOrder = getListOrder;
   static reorderList = reorderList;
