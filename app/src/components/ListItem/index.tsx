@@ -6,7 +6,7 @@ import { ListItem as ListItemType } from '/types';
 
 import RemoveButton from './RemoveButton';
 import Modal from './ListItemModal';
-import { Container, ListItemContainer, ListItemTitle } from './styles';
+import { Container, ListItemTitle } from './styles';
 
 interface Props extends ListItemType {
   index: number;

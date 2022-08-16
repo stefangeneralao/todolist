@@ -30,7 +30,3 @@ export const ListItemTitle = styled(Typography)`
   text-overflow: ellipsis;
   width: 100%;
 `;
-
-export const ListItemContainer = styled.div`
-  /* position: relative; */
-`;
