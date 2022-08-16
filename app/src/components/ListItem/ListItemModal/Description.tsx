@@ -43,6 +43,8 @@ const Description = ({
         onBlur={onBlur}
         disableUnderline
         placeholder="Add description"
+        fullWidth
+        multiline
       />
     </form>
   );
