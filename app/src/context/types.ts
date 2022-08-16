@@ -21,7 +21,7 @@ export interface RemoveList {
 }
 
 export interface RemoveListItem {
-  (listItemId: string): void;
+  (listItemId: string): Promise<void>;
 }
 
 export interface SetListItemTitle {
@@ -33,11 +33,11 @@ export interface SetListItemDescription {
 }
 
 export interface AddListItem {
-  (listId: string, title: string): void;
+  (listId: string, title: string): Promise<void>;
 }
 
 export interface AddList {
-  (title: string): void;
+  (title: string): Promise<void>;
 }
 
 export interface ListsProviderProps {
@@ -57,7 +57,7 @@ export interface MoveListItem {
     source: DraggableLocation;
     destination: DraggableLocation;
     draggableId: string;
-  }): void;
+  }): Promise<void>;
 }
 
 export interface ReorderListItem {
@@ -65,5 +65,5 @@ export interface ReorderListItem {
     source: DraggableLocation;
     destination: DraggableLocation;
     draggableId: string;
-  }): void;
+  }): Promise<void>;
 }

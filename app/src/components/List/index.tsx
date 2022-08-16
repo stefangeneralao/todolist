@@ -28,6 +28,8 @@ const List = ({ id, index, title, listItemIds }: Props) => {
 
   const onMouseLeave = () => setShowActions(false);
 
+  const isMobile = 'ontouchstart' in document.documentElement;
+
   const ListItems = useMemo(() => {
     return listItemIds.map((listItemId, index) => {
       const listItem = listItems[listItemId];
@@ -59,8 +61,9 @@ const List = ({ id, index, title, listItemIds }: Props) => {
             <Title variant="h3" {...provided.dragHandleProps}>
               {title}
             </Title>
-            {showActions && <RemoveButton listId={id} />}
+            <RemoveButton listId={id} show={isMobile || showActions} />
           </StyledTopSection>
+
           <Droppable droppableId={id} type="listItem">
             {(provided, snapshot) => (
               <ListItemsContainer
@@ -73,6 +76,7 @@ const List = ({ id, index, title, listItemIds }: Props) => {
               </ListItemsContainer>
             )}
           </Droppable>
+
           <NewlistItemInput listId={id} />
         </Container>
       )}

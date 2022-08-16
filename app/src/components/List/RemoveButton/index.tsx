@@ -1,11 +1,15 @@
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+
 import { useLists } from '~/context';
+
 import { Button } from './styles';
 
 interface Props {
   listId: string;
+  show: boolean;
 }
 
-const RemoveButton = ({ listId }: Props) => {
+const RemoveButton = ({ listId, show }: Props) => {
   const { removeList } = useLists();
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -14,7 +18,13 @@ const RemoveButton = ({ listId }: Props) => {
     removeList(listId);
   };
 
-  return <Button onClick={onClick}>X</Button>;
+  if (!show) return null;
+
+  return (
+    <Button onClick={onClick}>
+      <DeleteOutlinedIcon />
+    </Button>
+  );
 };
 
 export default RemoveButton;

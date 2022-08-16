@@ -7,7 +7,6 @@ export const Container = styled.div`
   border: 1px solid lightgrey;
   background-color: white;
   border-radius: 2px;
-  width: 220px;
 
   display: flex;
   flex-direction: column;
@@ -23,6 +22,7 @@ export const ListItemsContainer = styled.div<{ isDraggingOver: boolean }>`
   flex-grow: 1;
   min-height: 100px;
   padding: 16px 8px;
+  width: 200px;
 `;
 
 export const TopSection = styled.div`

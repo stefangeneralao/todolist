@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { v4 as uuid } from 'uuid';
 
 import { ListItem, ListItems, Lists } from '/types';
 
@@ -156,7 +157,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       setListOrder([...currentListOrder, listId]);
     };
 
-    const listId = crypto.randomUUID();
+    const listId = uuid();
     addListToState(listId);
     try {
       const newListId = await Api.addList(title);
@@ -196,7 +197,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       setLists(newLists);
     };
 
-    const optimisticListItemId = crypto.randomUUID();
+    const optimisticListItemId = uuid();
     addListItemToState(optimisticListItemId);
     try {
       const newListItemId = await Api.addListItem(listId, title);

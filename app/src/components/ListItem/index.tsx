@@ -16,7 +16,8 @@ const ListItem = ({ id, title, description, index }: Props) => {
   const [showRemoveButton, setShowRemoveButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { setListItemTitle, setListItemDescription } = useLists();
+  const { setListItemTitle, setListItemDescription, removeListItem } =
+    useLists();
 
   const onClick = () => {
     setIsModalOpen(true);
@@ -34,6 +35,10 @@ const ListItem = ({ id, title, description, index }: Props) => {
     await setListItemDescription(id, value);
   };
 
+  const onListItemRemove = async () => {
+    await removeListItem(id);
+  };
+
   const memoizedModal = useMemo(
     () => (
       <Modal
@@ -44,6 +49,7 @@ const ListItem = ({ id, title, description, index }: Props) => {
         onClose={() => setIsModalOpen(false)}
         onTitleSubmit={onTitleSubmit}
         onDescriptionSubmit={onDescriptionSubmit}
+        onListItemRemove={onListItemRemove}
       />
     ),
     [isModalOpen, title, description]

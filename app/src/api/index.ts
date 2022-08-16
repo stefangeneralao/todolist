@@ -7,16 +7,16 @@ const reorderList = (listOrder: string[]) =>
 
 const getLists = () => Api.get(`${Api.baseurl}/lists`);
 
-const addList = (title: string) =>
-  Api.post(`${Api.baseurl}/lists`, { title });
-  
-const deleteList = (listId: string) => Api.delete(`${Api.baseurl}/lists/${listId}`);
+const addList = (title: string) => Api.post(`${Api.baseurl}/lists`, { title });
+
+const deleteList = (listId: string) =>
+  Api.delete(`${Api.baseurl}/lists/${listId}`);
 
 const getListItems = () => Api.get(`${Api.baseurl}/list-items`);
 
 const addListItem = (listId: string, title: string) =>
   Api.post(`${Api.baseurl}/list-items`, { listId, title });
-  
+
 const updateListItem = (
   listItemId: string,
   config: { title?: string; description?: string }
@@ -24,7 +24,7 @@ const updateListItem = (
 
 const deleteListItem = (listItemId: string) =>
   Api.delete(`${Api.baseurl}/list-items/${listItemId}`);
-  
+
 const moveListItem = (
   listItemId: string,
   sourceListId: string,
@@ -36,12 +36,12 @@ const moveListItem = (
     destinationListId,
     destinationListItemIds,
   });
-  
+
 const updateListItemsIds = (listId: string, listItemIds: string[]) =>
   Api.patch(`${Api.baseurl}/lists/${listId}`, { listItemIds });
 
 export class Api {
-  static baseurl = 'http://localhost:3001';
+  static baseurl = 'http://192.168.0.2:3001';
 
   static getListOrder = getListOrder;
   static reorderList = reorderList;
