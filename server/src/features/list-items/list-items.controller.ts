@@ -22,12 +22,32 @@ router.patch('/:id', async (req: Request, res: Response) => {
   } = req.body;
   const listItemId = req.params.id;
 
+  if (!listItemId) {
+    res.sendStatus(400);
+    return;
+  }
+
   if (
     sourceListId &&
     destinationListId &&
     destinationListItemIds &&
     destinationListItemIds.length > 0
   ) {
+    if (typeof sourceListId !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (typeof destinationListId !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (!Array.isArray(destinationListItemIds)) {
+      res.sendStatus(400);
+      return;
+    }
+
     try {
       await MongoDBAdapter.moveListItem(
         listItemId,
@@ -54,7 +74,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
     }
   }
 
-  res.sendStatus(204);
+  res.sendStatus(400);
   return;
 });
 
@@ -62,6 +82,26 @@ router.post('/', async (req: Request, res: Response) => {
   const { listId, title } = req.body;
 
   try {
+    if (!listId) {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (!title) {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (typeof listId !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (typeof title !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
     const response = await MongoDBAdapter.addListItem(listId, title);
     res.send(response);
   } catch {
@@ -73,6 +113,16 @@ router.delete('/:id', async (req: Request, res: Response) => {
   const listItemId = req.params.id;
 
   try {
+    if (!listItemId) {
+      res.sendStatus(400);
+      return;
+    }
+
+    if (typeof listItemId !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
     await MongoDBAdapter.deleteListItem(listItemId);
     res.send();
   } catch {

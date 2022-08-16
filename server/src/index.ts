@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import { listsController } from './features/lists';
 import { listOrderController } from './features/list-order';
-import { listItemsController } from './features/listItems';
+import { listItemsController } from './features/list-items';
 
 const app = express();
 

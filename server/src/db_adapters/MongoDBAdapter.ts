@@ -56,7 +56,19 @@ class MongoDBAdapter extends DBAdapter {
     );
   };
 
+  static listExists = async (listId: string) => {
+    const lists = MongoDBAdapter.database.collection('lists');
+
+    return (
+      (await lists.find({ _id: new ObjectId(listId) }).toArray()).length > 0
+    );
+  };
+
   static addListItem = async (listId: string, title: string) => {
+    if (!(await MongoDBAdapter.listExists(listId))) {
+      throw new Error('List does not exist');
+    }
+
     const listItems = MongoDBAdapter.database.collection('list-items');
     const listItem = await listItems.insertOne({
       listId,
@@ -134,8 +146,9 @@ class MongoDBAdapter extends DBAdapter {
     const listItems = MongoDBAdapter.database.collection('list-items');
     const listOrder = MongoDBAdapter.database.collection('list-order');
 
-    const listItemIds = (await lists.findOne({ _id: new ObjectId(listId) }))
-      .listItemIds;
+    const listItemIds = (
+      await lists.findOne({ _id: new ObjectId(listId) })
+    ).listItemIds.map((id: string) => new ObjectId(id));
 
     await Promise.all([
       listItems.deleteMany({ _id: { $in: listItemIds } }),

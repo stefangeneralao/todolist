@@ -33,6 +33,11 @@ router.post('/', async (req: Request, res: Response) => {
   const { title } = req.body;
 
   try {
+    if (!title) {
+      res.sendStatus(400);
+      return;
+    }
+
     const response = await MongoDBAdapter.addList(title);
     res.send(response);
   } catch (error) {
@@ -45,6 +50,11 @@ router.delete('/:id', (req: Request, res: Response) => {
   const listId = req.params.id;
 
   try {
+    if (!listId) {
+      res.sendStatus(400);
+      return;
+    }
+
     MongoDBAdapter.deleteList(listId);
     res.sendStatus(200);
   } catch (error) {
