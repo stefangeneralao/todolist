@@ -7,7 +7,9 @@ export const Button = styled(MuiButton)`
   height: inherit;
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<{
+  isDragging: boolean;
+}>`
   margin: 8px;
   padding: 12px;
   border: 1px solid lightgrey;
@@ -16,6 +18,9 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  box-shadow: ${(props) =>
+    props.isDragging ? `0px 3px 9px #00000033` : `0px 1px 3px #00000000`};
 `;
 
 export const Title = styled(Typography)`

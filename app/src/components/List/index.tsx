@@ -58,9 +58,10 @@ const List = ({ id, index, title, listItemIds }: Props) => {
 
   return (
     <Draggable draggableId={id} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}
+          isDragging={snapshot.isDragging}
           ref={provided.innerRef}
           onMouseOver={onMouseOver}
           onMouseLeave={onMouseLeave}
