@@ -77,9 +77,9 @@ class MongoDBAdapter extends DBAdapter {
     await listItems.deleteOne({ _id: new ObjectId(listItemId) });
   };
 
-  static reorderList = async (listOrder: string[]) => {
+  static reorderList = async (order: string[]) => {
     const listOrderDocument = MongoDBAdapter.database.collection('list-order');
-    await listOrderDocument.updateOne({}, { $set: { order: listOrder } });
+    await listOrderDocument.updateOne({}, { $set: { order } });
   };
 
   static moveListItem = async (

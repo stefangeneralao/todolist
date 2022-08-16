@@ -14,10 +14,12 @@ router.get('/', async (_, res: Response) => {
 });
 
 router.put('/', async (req: Request, res: Response) => {
-  const { listOrder } = req.body;
+  const { order } = req.body;
 
   try {
-    await MongoDBAdapter.reorderList(listOrder);
+    if (Array.isArray(order)) {
+      await MongoDBAdapter.reorderList(order);
+    }
     res.send();
   } catch {
     res.sendStatus(500);
