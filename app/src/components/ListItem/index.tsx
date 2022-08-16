@@ -6,7 +6,7 @@ import { ListItem as ListItemType } from '/types';
 
 import RemoveButton from './RemoveButton';
 import Modal from './ListItemModal';
-import { Container, Input, ListItemContainer, ListItemTitle } from './styles';
+import { Container, ListItemContainer, ListItemTitle } from './styles';
 
 interface Props extends ListItemType {
   index: number;
@@ -62,10 +62,10 @@ const ListItem = ({ id, title, description, index }: Props) => {
             onMouseOver={onMouseOver}
             onMouseLeave={onMouseLeave}
           >
-            <ListItemContainer>
+            <div>
               <ListItemTitle>{title}</ListItemTitle>
               {showRemoveButton && <RemoveButton id={id} />}
-            </ListItemContainer>
+            </div>
           </Container>
         )}
       </Draggable>

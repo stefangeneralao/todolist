@@ -1,40 +1,36 @@
 import styled from 'styled-components';
-import { Input as MuiInput, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 export const Container = styled.div<{
   isDragging: boolean;
 }>`
-  ${({ isDragging }) => `
-    display: grid;
-    height: 30px;
-    grid-template-columns: 1fr auto;
-    padding: 8px;
-    margin-bottom: 8px;
-    border-radius: 2px;
-    background-color: white;
-    transition: background-color 0.2s ease;
-    box-shadow: ${
-      isDragging ? `0px 3px 9px #00000033` : `0px 1px 3px #00000033`
-    }
-  `}
-`;
+  position: relative;
 
-export const Input = styled(MuiInput)`
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 30px;
   width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 24px 12px;
+
+  margin-bottom: 12px;
+  border-radius: 2px;
+  background-color: white;
+  transition: background-color 0.2s ease;
+  box-shadow: ${(props) =>
+    props.isDragging ? `0px 3px 9px #00000033` : `0px 1px 3px #00000033`};
 `;
 
-export const ListItemTitle = styled(Typography)``;
+export const ListItemTitle = styled(Typography)`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+`;
 
 export const ListItemContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+  /* position: relative; */
 `;
