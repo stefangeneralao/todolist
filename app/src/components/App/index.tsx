@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { SnackbarProvider } from 'notistack';
 
 import { ListsProvider } from '~/context';
 import Lists from '~/components/Lists';
@@ -15,10 +16,12 @@ const theme = createTheme({
 
 const App = () => (
   <ThemeProvider theme={theme}>
-    <ListsProvider>
-      <NewListInput />
-      <Lists />
-    </ListsProvider>
+    <SnackbarProvider maxSnack={4}>
+      <ListsProvider>
+        <NewListInput />
+        <Lists />
+      </ListsProvider>
+    </SnackbarProvider>
   </ThemeProvider>
 );
 export default App;

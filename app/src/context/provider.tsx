@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 import { ListItem, ListItems, Lists } from '/types';
+
+import { Api } from '~/api';
 
 import {
   AddList,
@@ -16,44 +19,31 @@ import {
   SetListItemTitle,
 } from './types';
 import { ListsContext } from './context';
-import { Api } from '~/api';
 
 export const ListsProvider = ({ children }: ListsProviderProps) => {
   const [listItems, setListItems] = useState<ListItems>({});
   const [lists, setLists] = useState<Lists>({});
   const [listOrder, setListOrder] = useState<string[]>([]);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   useEffect(() => {
-    const getLists = async () => {
+    const getInitialState = async () => {
       try {
-        const response = await Api.getLists();
-        setLists(response);
-      } catch (error) {
-        console.log('error', error);
+        const [initialLists, initialListOrder, initialListItems] =
+          await Promise.all([
+            Api.getLists(),
+            Api.getListOrder(),
+            Api.getListItems(),
+          ]);
+        setLists(initialLists);
+        setListOrder(initialListOrder);
+        setListItems(initialListItems);
+      } catch {
+        enqueueSnackbar('Could not get initial state', { variant: 'error' });
       }
     };
-
-    const getListOrder = async () => {
-      try {
-        const response = await Api.getListOrder();
-        setListOrder(response);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-
-    const getListItems = async () => {
-      try {
-        const response = await Api.getListItems();
-        setListItems(response);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-
-    getLists();
-    getListOrder();
-    getListItems();
+    getInitialState();
   }, []);
 
   const reorderList: ReorderList = async ({
@@ -71,9 +61,8 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     try {
       await Api.reorderList(newListOrder);
     } catch (error) {
-      console.log('error', error);
       setListOrder(currentListOrder);
-      throw new Error(`Could not reorder list: ${error}`);
+      enqueueSnackbar('Could not reorder list', { variant: 'error' });
     }
   };
 
@@ -100,7 +89,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       ...destinationList,
       listItemIds: destinationListItemIds,
     };
-    
+
     const newLists = {
       ...lists,
       [newStart.id]: newStart,
@@ -113,12 +102,11 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
         draggableId,
         sourceList.id,
         destinationList.id,
-        destinationListItemIds,
+        destinationListItemIds
       );
     } catch (error) {
-      console.log('error', error);
       setLists(currentLists);
-      throw new Error(`Could not move list item: ${error}`);
+      enqueueSnackbar('Could not move list item', { variant: 'error' });
     }
   };
 
@@ -149,7 +137,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       await Api.updateListItemsIds(newList.id, sourceListItemIds);
     } catch (error) {
       setLists(currentLists);
-      throw new Error(`Could not reorder list item: ${error}`);
+      enqueueSnackbar('Could not reorder list item', { variant: 'error' });
     }
   };
 
@@ -166,8 +154,8 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       const newLists = { ...currentLists, [listId]: newList };
       setLists(newLists);
       setListOrder([...currentListOrder, listId]);
-    }
-    
+    };
+
     const listId = crypto.randomUUID();
     addListToState(listId);
     try {
@@ -177,7 +165,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     } catch (error) {
       setLists(currentLists);
       setListOrder(currentListOrder);
-      throw new Error(`Could not add list: ${error}`);
+      enqueueSnackbar('Could not add list', { variant: 'error' });
     }
   };
 
@@ -190,12 +178,12 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
         id: listItemId,
         title,
       };
-  
+
       const newListItems = {
         ...currentListItems,
         [listItemId]: newListItem,
       };
-  
+
       const newLists = {
         ...currentLists,
         [listId]: {
@@ -203,11 +191,11 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
           listItemIds: [...currentLists[listId].listItemIds, listItemId],
         },
       };
-  
+
       setListItems(newListItems);
       setLists(newLists);
     };
-    
+
     const optimisticListItemId = crypto.randomUUID();
     addListItemToState(optimisticListItemId);
     try {
@@ -216,7 +204,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     } catch (error) {
       setListItems(currentListItems);
       setLists(currentLists);
-      throw new Error(`Error adding list item: ${error}`);
+      enqueueSnackbar('Could not add list item', { variant: 'error' });
     }
   };
 
@@ -239,7 +227,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       await Api.updateListItem(listItemId, { title });
     } catch (error) {
       setListItems(currentListItems);
-      throw new Error(`Error updating list item: ${error}`);
+      enqueueSnackbar('Could not update list item', { variant: 'error' });
     }
   };
 
@@ -262,7 +250,7 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
       await Api.updateListItem(listItemId, { description });
     } catch (error) {
       setListItems(currentListItems);
-      throw new Error(`Error updating list item: ${error}`);
+      enqueueSnackbar('Could not update list item', { variant: 'error' });
     }
   };
 
@@ -300,14 +288,14 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     } catch (error) {
       setListItems(currentListItems);
       setLists(currentLists);
-      throw new Error(`Error deleting list item: ${error}`);
+      enqueueSnackbar('Could not delete list item', { variant: 'error' });
     }
   };
 
-  const removeList: RemoveList = (listId: string) => {
+  const removeList: RemoveList = async (listId: string) => {
     const currentLists = { ...lists };
     const currentListOrder = [...listOrder];
-    
+
     const newListOrder = listOrder.filter((id) => id !== listId);
     const newLists = { ...lists };
     delete newLists[listId];
@@ -315,11 +303,11 @@ export const ListsProvider = ({ children }: ListsProviderProps) => {
     setListOrder(newListOrder);
     setLists(newLists);
     try {
-      Api.deleteList(listId);
+      await Api.deleteList(listId);
     } catch (error) {
       setListOrder(currentListOrder);
       setLists(currentLists);
-      throw new Error(`Error deleting list: ${error}`);
+      enqueueSnackbar('Could not delete list', { variant: 'error' });
     }
   };
 
